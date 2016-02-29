@@ -13,7 +13,6 @@ Seg7 bebado(segs, digits);
 bool lastState;
 
 void setup() {
-  EEPROM.write(0, 0);
   if (EEPROM.read(0) == EEPROM_BYTE_VALIDATOR) {
     EEPROM.get(1, value);
   } else {
@@ -41,26 +40,43 @@ void loop() {
       if (lastState == 0) {
         lastState = 1;
 
-        if ((PINC & 0b00000001) ^ 0b00000001) { // Litro
+        if ((PINC & 0b00001111) == 0b00000110) { // litro and latinha
+          while (1) {
+            bebado.show();
+            if ((PINC & 0b00001111) == 0b00001111) { // no button pressed
+              bebado.show();
+              if ((PINC & 0b00001111) == 0b00001111) { // no button pressed
+                while (1) {
+                  digitalWrite(13, 1);
+                  bebado.show();
+                  if ((PINC & 0b00001111) == 0b00001001) { // long and latao
+                    bebado.setValue(0);
+                    EEPROM.put(1, 0.0);
+                    value = 0;
+                    break;
+                  } else if ((PINC & 0b00001111) == 0b00000110) { // undo
+                    bebado.setValue(value);
+                    break;
+                  }
+                }
+                digitalWrite(13, 0);
+                break;
+              }
+            }
+          }
+        }
+        else if ((PINC & 0b00000001) ^ 0b00000001) { // Litro
           bebado.setValue(value += 1);
-          digitalWrite(13, 1);
           EEPROM.put(1, value);
-          digitalWrite(13, 0);
         } else if ((PINC & 0b00000010) ^ 0b00000010) { // Long neck
           bebado.setValue(value += 0.355);
-          digitalWrite(13, 1);
           EEPROM.put(1, value);
-          digitalWrite(13, 0);
         } else if ((PINC & 0b00000100) ^ 0b00000100) { // Latao
           bebado.setValue(value += 0.473);
-          digitalWrite(13, 1);
           EEPROM.put(1, value);
-          digitalWrite(13, 0);
         } else if ((PINC & 0b00001000) ^ 0b00001000) { // Latinha
           bebado.setValue(value += 0.350);
-          digitalWrite(13, 1);
           EEPROM.put(1, value);
-          digitalWrite(13, 0);
         }
       }
     }
