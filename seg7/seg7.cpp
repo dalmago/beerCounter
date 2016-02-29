@@ -64,9 +64,7 @@ Seg7::Seg7(int segments[], int digits[]){
 
 void Seg7::setValue(float v){
     if (v >= pow(10, 4-DECIMAL_DIGITS))
-        value = v-pow(10, 4-DECIMAL_DIGITS);
-    else
-        value = v;
+        v = v-pow(10, 4-DECIMAL_DIGITS);
     
     dig3 = ((int)(v*pow(10, DECIMAL_DIGITS)))%10;
     dig2 = ((int)(v*pow(10, DECIMAL_DIGITS-1)))%10;
@@ -75,18 +73,8 @@ void Seg7::setValue(float v){
     
 }
 
-float Seg7::getValue(){
-    return (value);
-}
-
 void Seg7::setMuxTime(char time){
     muxTime = time;
-}
-
-void Seg7::printValue(){
-    Serial.begin(19200);
-    Serial.print("value: "); Serial.println(value);
-    Serial.end();
 }
 
 void Seg7::printPins(){

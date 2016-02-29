@@ -14,7 +14,6 @@ private:
     char dig0, dig1, dig2, dig3; // from left to right
     char segs[8]; // A-G, dot at the end
     char digits[4];
-    float value;
     char muxTime;
     
 public:
@@ -24,7 +23,6 @@ public:
     Seg7(int[], int[]);
     
     void setValue(float=0);
-    float getValue();
     void setMuxTime(char);
     
     void printValue();
